@@ -1,0 +1,6 @@
+changer l'api
+utiliser un json pour stocker les scores
+mise en page agréable
+au niveau des mots (= ne sélectionner que des mots d'une longueur limitée)
+ajouter une option "accélération"
+possibilité de choisir des corpus de mots thématiques
