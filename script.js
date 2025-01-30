@@ -1,26 +1,40 @@
-const words_api_link = "https://random-word-api.herokuapp.com/word?";
+// const words_api_link = "https://random-word-api.herokuapp.com/word?";
+const words_api_link = "https://trouve-mot.fr/api/size";
+
 const word_to_write = document.getElementById("word_to_write");
 const time = document.getElementById("chrono");
+const nb_words = document.getElementById("nb_words");
+const length_words = document.getElementById("length_words");
+const screen = document.getElementById("screen");
+const buttonStart = document.getElementById("start");
+const inputZone = document.getElementById("input_keyboard");
+const score = document.getElementById("score");
 
-let nbWords = 3;
+
+let nbWords = nb_words.value;
+let lenWord = length_words.value;
 let words = [];
 let isFirstWord = true;
 let isGameRunning = false;
 
 
-const buttonStart = document.getElementById("start");
 buttonStart.addEventListener("click", startGame);
-
-const screen = document.getElementById("screen");
-
-const inputZone = document.getElementById("input_keyboard");
 inputZone.addEventListener("input", check);
+length_words.addEventListener("change", () => {
+    words = [];
+    lenWord = length_words.value;
+    get();
+});
+nb_words.addEventListener("change", () => {
+    words = [];
+    nbWords = nb_words.value;
+    get();
+});
 
-const score = document.getElementById("score");
 
 async function getWords() {
     try {
-        const response = await fetch(words_api_link + "lang=fr&number=" + nbWords);
+        const response = await fetch(words_api_link + "/" + lenWord + "/" + nbWords);
         const data = await response.json();
         words.push(...data);
     } catch (error) {
@@ -29,7 +43,7 @@ async function getWords() {
 }
 
 function addWordToScreen(word){
-    screen.innerHTML += "<p>" + word + "</p>";        
+    screen.innerHTML += "<p>" + word.name + "</p>";        
     
 }
 
