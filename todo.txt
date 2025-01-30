@@ -1,6 +1,7 @@
-changer l'api
+changer l'api DONE
+au niveau des mots (= ne sélectionner que des mots d'une longueur limitée) DONE
+possibilité de choisir des corpus de mots thématiques DONE
+
 utiliser un json pour stocker les scores
 mise en page agréable
-au niveau des mots (= ne sélectionner que des mots d'une longueur limitée)
 ajouter une option "accélération"
-possibilité de choisir des corpus de mots thématiques
