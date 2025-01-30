@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de vitesse</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Jeu de vitesse</h1>
+    <p>Frappe sur ton clavier le plus vite possible !</p>
+    <div>
+        score : <span id="score">0</span>
+    </div>
+    
+    <div id="screen">
+        <div type="text" id="word_to_write"></div>
+    </div>
+    <div id="keyboard">
+        <input type="text" id="input_keyboard" placeholder="entrer le mot ici">
+    </div>
+    <button id="start">Commencer</button>
+    <div id="time">
+        <label for="chrono">temps :</label>
+        <select name="chrono" id="chrono">
+            <option value="">--selectionner un temps--</option>
+            <option value="1">2s</option>
+            <option value="2">3s</option>
+            <option value="3">5s</option>
+            <option value="3">10s</option>
+        </select>
+    </div>
+</body>
+</html>

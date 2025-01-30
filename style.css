@@ -1,0 +1,12 @@
+/* * {
+    border: 1px solid;
+} */
+
+html, body{
+    top: 0;
+    height: 100%;
+}
+
+#screen{
+    height: 50%
+}
