@@ -76,6 +76,7 @@ function changeEtat(){
     if(isGameRunning){
         clearInterval(interval)
         resetTimer()
+        enableButtons();
         start.innerText = "Commencer"
         isGameRunning = false;
         score.innerText = "0";
@@ -84,10 +85,6 @@ function changeEtat(){
         basicTime = baseTime;
         get();
         screen.innerHTML = "";
-        time.removeAttribute("disabled");
-        nb_words.removeAttribute("disabled");
-        categoriy.removeAttribute("disabled");
-        length_words.removeAttribute("disabled");
     }else{
         startTimer();
         isGameRunning = true;
@@ -97,10 +94,7 @@ function changeEtat(){
 }
 
 function startGame() {
-    time.setAttribute("disabled", "");
-    nb_words.setAttribute("disabled","");
-    categoriy.setAttribute("disabled", "");
-    length_words.setAttribute("disabled", "");
+    disableButtons();
     changeEtat()
     if(isGameRunning){
         if(words.length > 0) {
@@ -119,6 +113,22 @@ function startGame() {
             }
         }, time.value * basicTime);
     }
+}
+
+function disableButtons(){
+    time.setAttribute("disabled", "");
+    nb_words.setAttribute("disabled","");
+    categoriy.setAttribute("disabled", "");
+    length_words.setAttribute("disabled", "");
+    checkAccel.setAttribute("disabled", "");
+}
+
+function enableButtons(){
+    time.removeAttribute("disabled");
+    nb_words.removeAttribute("disabled");
+    categoriy.removeAttribute("disabled");
+    length_words.removeAttribute("disabled");
+    checkAccel.removeAttribute("disabled");
 }
 
 function accel(){
@@ -176,7 +186,6 @@ function stopTimer(){
 }
 
 function resetTimer(){
-    console.log("aaaaaaaaaaaaaaa");
     clearInterval(timerInterval);
     timeCurrentChrono = timeTotalStart;
     timeChrono.textContent = timeCurrentChrono;
