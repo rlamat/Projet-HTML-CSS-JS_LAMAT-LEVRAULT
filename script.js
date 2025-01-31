@@ -11,7 +11,10 @@ const inputZone = document.getElementById("input_keyboard");
 const score = document.getElementById("score");
 const timeChrono = document.getElementById("time")
 const time = document.getElementById("chrono");
-const timeTotalStart = 10;
+const checkAccel = document.getElementById("accel");
+const timeTotalStart = 60;
+const baseTime = 1000;
+const speedAccel = 20;
 
 let nbWords = nb_words.value;
 let lenWord = length_words.value;
@@ -21,6 +24,8 @@ let isGameRunning = false;
 let nCategory = categoriy.value;
 let timeCurrentChrono = timeTotalStart;
 let scores = [];
+let basicTime = 1000;
+let wordsToPrint = [];
 
 buttonStart.addEventListener("click", startGame);
 inputZone.addEventListener("input", check);
@@ -71,17 +76,15 @@ function changeEtat(){
     if(isGameRunning){
         clearInterval(interval)
         resetTimer()
+        enableButtons();
         start.innerText = "Commencer"
         isGameRunning = false;
         score.innerText = "0";
         words = [];
         timeOver = false;
+        basicTime = baseTime;
         get();
         screen.innerHTML = "";
-        time.removeAttribute("disabled");
-        nb_words.removeAttribute("disabled");
-        categoriy.removeAttribute("disabled");
-        length_words.removeAttribute("disabled");
     }else{
         startTimer();
         isGameRunning = true;
@@ -91,13 +94,9 @@ function changeEtat(){
 }
 
 function startGame() {
-    time.setAttribute("disabled", "");
-    nb_words.setAttribute("disabled","");
-    categoriy.setAttribute("disabled", "");
-    length_words.setAttribute("disabled", "");
+    disableButtons();
     changeEtat()
     if(isGameRunning){
-        let wordsToPrint = [];
         if(words.length > 0) {
             let word = words[0];
             wordsToPrint.push(word);
@@ -106,12 +105,45 @@ function startGame() {
         }
         interval = setInterval(() => {
             if(words.length > 0) {
+                accel();
                 let word = words[0];
                 wordsToPrint.push(word);
                 addWordToScreen(word);
                 words.shift();
             }
-        }, time.value * 1000);
+        }, time.value * basicTime);
+    }
+}
+
+function disableButtons(){
+    time.setAttribute("disabled", "");
+    nb_words.setAttribute("disabled","");
+    categoriy.setAttribute("disabled", "");
+    length_words.setAttribute("disabled", "");
+    checkAccel.setAttribute("disabled", "");
+}
+
+function enableButtons(){
+    time.removeAttribute("disabled");
+    nb_words.removeAttribute("disabled");
+    categoriy.removeAttribute("disabled");
+    length_words.removeAttribute("disabled");
+    checkAccel.removeAttribute("disabled");
+}
+
+function accel(){
+    if(checkAccel.checked){
+        clearInterval(interval);
+        basicTime = basicTime - speedAccel;
+        interval = setInterval(() => {
+            if(words.length > 0) {
+                accel();
+                let word = words[0];
+                wordsToPrint.push(word);
+                addWordToScreen(word);
+                words.shift();
+            }
+        }, time.value * basicTime);
     }
 }
 
@@ -142,9 +174,6 @@ function startTimer(){
         timeChrono.textContent = timeCurrentChrono;
     }, 1000);
     let data = { year: 2012 };
-
-    
-    // faire un tableau des scores {} avec les elements à afficher sur la session. pas de serveur, tant pis
 }
 
 function stopTimer(){
@@ -157,7 +186,6 @@ function stopTimer(){
 }
 
 function resetTimer(){
-    console.log("aaaaaaaaaaaaaaa");
     clearInterval(timerInterval);
     timeCurrentChrono = timeTotalStart;
     timeChrono.textContent = timeCurrentChrono;
