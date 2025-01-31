@@ -12,7 +12,7 @@ const score = document.getElementById("score");
 const timeChrono = document.getElementById("time")
 const time = document.getElementById("chrono");
 const checkAccel = document.getElementById("accel");
-const timeTotalStart = 60;
+const timeTotalStart = 10;
 const baseTime = 1000;
 const speedAccel = 20;
 
@@ -129,6 +129,7 @@ function enableButtons(){
     categoriy.removeAttribute("disabled");
     length_words.removeAttribute("disabled");
     checkAccel.removeAttribute("disabled");
+    inputZone.removeAttribute("disabled");
 }
 
 function accel(){
@@ -182,7 +183,7 @@ function stopTimer(){
     clearInterval(timerInterval);
     clearInterval(interval);
     addScore(score.textContent);
-
+    inputZone.setAttribute("disabled", "");
 }
 
 function resetTimer(){
