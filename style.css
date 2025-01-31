@@ -42,7 +42,7 @@ body{
     align-self: center;
     border: blue solid 1px;
     flex-wrap: wrap;
-    overflow: scroll;
+    /* overflow: scroll; */
 }
 #screen > * {
     margin: 5px;
