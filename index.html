@@ -6,98 +6,103 @@
     <title>Jeu de vitesse</title>
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="styleTab.css">
+    <!-- <link rel="stylesheet" href="styleTab.css"> -->
     <script src="script.js" defer></script>
 </head>
 <body>
     <h1>Jeu de vitesse</h1>
     <p>Frappe sur ton clavier le plus vite possible !</p>
     <div id="infos_game">
-        <p>Vous disposez d'une minute maximum.</p>
-        <p>Temps restant : <span id="time">60</span> secondes !<p>
+        <div>
+            <p>Vous disposez d'une minute maximum.</p>
+            <p>Temps restant : <span id="time">60</span> secondes !<p>
+        </div>
         <p>score : <span id="score">0</span></p>
     </div>
+    <div id="view">
+        <div id="game_container">
     
-    <div id="game_container">
-
-        <div id="screen">a</div>
-        <div>
-            <div id="btn_commencer"><button id="start">Commencer</button></div>
-            <div id="keyboard">
-                <input type="text" id="input_keyboard" placeholder="entrer le mot ici">
-            </div>
-            <div id="time_container">
-                <label for="chrono">temps :</label>
-                <select name="chrono" id="chrono">
-                    <option value="10">10s</option>
-                    <option value="5">5s</option>
-                    <option value="3">3s</option>
-                    <option value="2">2s</option>
-                    <option value="1">1s</option>
-                </select>
-            </div>
-            <div id="nb_words_container">
-                <label for="nb_words">nombre de mots :</label>
-                <select name="nb_words" id="nb_words">
-                    <option value="30">30 mots</option>
-                    <option value="20">20 mots</option>
-                    <option value="10">10 mots</option>
-                    <option value="5">5 mots</option>
-                </select>
-            </div>
-            <div id="length_words_container">
-                <label for="length_words">Taille des mots :</label>
-                <select name="length_words" id="length_words">
-                    <option value="0">sans limites</option>
-                    <option value="8">8 caractères ou moins</option>
-                </select>
-            </div>
-            <div id="category_words_container">
-                <label for="category_words">Catégories :</label>
-                <select name="category_words" id="category_words">
-                    <option value="0">Toutes catégories</option>
-                    <option value="1">L'ÉCOLE – LA CLASSE – L'INSTRUCTION</option>
-                    <option value="2">PAYSAGES – CLIMAT – FORMES</option>
-                    <option value="3">QUALITÉS ET DÉFAUTS</option>
-                    <option value="4">CALCUL ET MESURES</option>
-                    <option value="5">LES ALIMENTS – LES BOISSONS- LES REPAS</option>
-                    <option value="6">LE CORPS HUMAIN</option>
-                    <option value="7">LES SENS – LA VOLONTE – L'INTELLIGENCE</option>
-                    <option value="8">L'INTÉRIEUR ET LE MOBILIER</option>
-                    <option value="9">L'INDUSTRIE ET LE TRAVAIL</option>
-                    <option value="10">LES ARTS</option>
-                    <option value="11">L'AGRICULTURE</option>
-                    <option value="12">VERGER – BOIS – CHASSE - PÊCHE</option>
-                    <option value="13">GESTES ET MOUVEMENTS</option>
-                    <option value="14">ÉPOQUE – TEMPS - SAISONS</option>
-                    <option value="15">VÊTEMENTS – TOILETTE - PARURES</option>
-                    <option value="16">SPORTS ET JEUX</option>
-                    <option value="17">LA MAISON – LE BATIMENT</option>
-                    <option value="18">LES VOYAGES</option>
-                    <option value="19">LES ANIMAUX</option>
-                    <option value="20">VILLE – VILLAGE – UNIVERS - DIMENSIONS</option>
-                    <option value="21">EAUX – MINÉRAUX - VÉGÉTAUX</option>
-                    <option value="22">LE COMMERCE</option>
-                    <option value="23">LA COMMUNICATION</option>
-                    <option value="24">JOIES ET PEINES</option>
-                    <option value="25">GOUVERNEMENT ET JUSTICE</option>
-                    <option value="26">L'ARMÉE</option>
-                    <option value="27">VIE HUMAINE – MALADIES - HYGIÈNE</option>
-                </select>
+            <div id="screen"></div>
+            <div id="configs">
+                <div id="btn_commencer"><button id="start">Commencer</button></div>
+                <div id="keyboard">
+                    <input type="text" id="input_keyboard" placeholder="entrer le mot ici">
+                </div>
+                <div id="parameters">
+                    <div id="time_container">
+                        <label for="chrono">temps :</label>
+                        <select name="chrono" id="chrono">
+                            <option value="10">10s</option>
+                            <option value="5">5s</option>
+                            <option value="3">3s</option>
+                            <option value="2">2s</option>
+                            <option value="1">1s</option>
+                        </select>
+                    </div>
+                    <div id="nb_words_container">
+                        <label for="nb_words">nombre de mots :</label>
+                        <select name="nb_words" id="nb_words">
+                            <option value="30">30 mots</option>
+                            <option value="20">20 mots</option>
+                            <option value="10">10 mots</option>
+                            <option value="5">5 mots</option>
+                        </select>
+                    </div>
+                    <div id="length_words_container">
+                        <label for="length_words">Taille des mots :</label>
+                        <select name="length_words" id="length_words">
+                            <option value="0">sans limites</option>
+                            <option value="8">8 caractères ou moins</option>
+                        </select>
+                    </div>
+                    <div id="category_words_container">
+                        <label for="category_words">Catégories :</label>
+                        <select name="category_words" id="category_words">
+                            <option value="0">Toutes catégories</option>
+                            <option value="1">L'ÉCOLE – LA CLASSE – L'INSTRUCTION</option>
+                            <option value="2">PAYSAGES – CLIMAT – FORMES</option>
+                            <option value="3">QUALITÉS ET DÉFAUTS</option>
+                            <option value="4">CALCUL ET MESURES</option>
+                            <option value="5">LES ALIMENTS – LES BOISSONS- LES REPAS</option>
+                            <option value="6">LE CORPS HUMAIN</option>
+                            <option value="7">LES SENS – LA VOLONTE – L'INTELLIGENCE</option>
+                            <option value="8">L'INTÉRIEUR ET LE MOBILIER</option>
+                            <option value="9">L'INDUSTRIE ET LE TRAVAIL</option>
+                            <option value="10">LES ARTS</option>
+                            <option value="11">L'AGRICULTURE</option>
+                            <option value="12">VERGER – BOIS – CHASSE - PÊCHE</option>
+                            <option value="13">GESTES ET MOUVEMENTS</option>
+                            <option value="14">ÉPOQUE – TEMPS - SAISONS</option>
+                            <option value="15">VÊTEMENTS – TOILETTE - PARURES</option>
+                            <option value="16">SPORTS ET JEUX</option>
+                            <option value="17">LA MAISON – LE BATIMENT</option>
+                            <option value="18">LES VOYAGES</option>
+                            <option value="19">LES ANIMAUX</option>
+                            <option value="20">VILLE – VILLAGE – UNIVERS - DIMENSIONS</option>
+                            <option value="21">EAUX – MINÉRAUX - VÉGÉTAUX</option>
+                            <option value="22">LE COMMERCE</option>
+                            <option value="23">LA COMMUNICATION</option>
+                            <option value="24">JOIES ET PEINES</option>
+                            <option value="25">GOUVERNEMENT ET JUSTICE</option>
+                            <option value="26">L'ARMÉE</option>
+                            <option value="27">VIE HUMAINE – MALADIES - HYGIÈNE</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
+        <aside>
+            <h2>Tableau des scores</h2>
+            <table id="score_table">
+                <thead>
+                    <tr>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </aside>
     </div>
-    <aside>
-        <h2>Tableau des scores</h2>
-        <table id="score_table">
-            <thead>
-                <tr>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </aside>
 </body>
 </html>
