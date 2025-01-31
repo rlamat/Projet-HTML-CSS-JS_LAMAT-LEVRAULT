@@ -148,7 +148,7 @@ function accel(){
 }
 
 function check(){
-    let input = inputZone.value;
+    let input = inputZone.value.trim();
     let word = screen.children[0].innerText;
     if(input == word){
         screen.removeChild(screen.children[0]);
