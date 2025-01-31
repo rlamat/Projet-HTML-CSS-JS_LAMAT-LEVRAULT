@@ -68,7 +68,7 @@ async function getWords() {
 }
 
 function addWordToScreen(word){
-    screen.innerHTML += "<p>" + word.name + "</p>";        
+    screen.innerHTML += "<div><p>" + word.name + "</p></div>";        
     
 }
 
