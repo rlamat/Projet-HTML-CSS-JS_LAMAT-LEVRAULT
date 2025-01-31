@@ -1,0 +1,44 @@
+/* Style pour l'aside */
+aside {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Style du titre dans l'aside */
+aside h2 {
+    font-size: 1.8rem;
+    color: #4CAF50;
+    margin-bottom: 15px;
+}
+
+/* Style du tableau */
+#score_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    text-align: left;
+}
+
+#score_table th, #score_table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+#score_table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#score_table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#score_table tbody tr:hover {
+    background-color: #f1f1f1;
+}

@@ -11,6 +11,7 @@ const inputZone = document.getElementById("input_keyboard");
 const score = document.getElementById("score");
 const timeChrono = document.getElementById("time")
 const time = document.getElementById("chrono");
+const timeTotalStart = 10;
 
 let nbWords = nb_words.value;
 let lenWord = length_words.value;
@@ -18,7 +19,8 @@ let words = [];
 let isFirstWord = true;
 let isGameRunning = false;
 let nCategory = categoriy.value;
-let timeCurrentChrono = 3;
+let timeCurrentChrono = timeTotalStart;
+let scores = [];
 
 buttonStart.addEventListener("click", startGame);
 inputZone.addEventListener("input", check);
@@ -129,7 +131,7 @@ async function get() {
 }
 
 function startTimer(){
-    timeCurrentChrono = 3;
+    timeCurrentChrono = timeTotalStart;
     timeChrono.textContent = timeCurrentChrono;
     timerInterval = setInterval(() => {
         timeCurrentChrono = timeCurrentChrono - 1;
@@ -141,19 +143,7 @@ function startTimer(){
     }, 1000);
     let data = { year: 2012 };
 
-    //////////////////////////////////////////////////////////////
-    // Convertir en JSON
-    const jsonString = JSON.stringify(data, null, 2);
-
-    // Créer un fichier et déclencher le téléchargement
-    const blob = new Blob([jsonString], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "data.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    ////////////////////////////////////////////////////////////////
+    
     // faire un tableau des scores {} avec les elements à afficher sur la session. pas de serveur, tant pis
 }
 
@@ -162,13 +152,36 @@ function stopTimer(){
     console.log(timeCurrentChrono)
     clearInterval(timerInterval);
     clearInterval(interval);
+    addScore(score.textContent);
+
 }
 
 function resetTimer(){
     console.log("aaaaaaaaaaaaaaa");
     clearInterval(timerInterval);
-    timeCurrentChrono = 3;
+    timeCurrentChrono = timeTotalStart;
     timeChrono.textContent = timeCurrentChrono;
 }
+
+function addScore(score) {
+    scores.push({score: score });
+    scores.sort((a, b) => b.score - a.score);
+    updateTable();
+}
+
+function updateTable() {
+    const table = document.getElementById('score_table');
+    const rows = Array.from(table.rows);
+    console.log("aaaaaa");
+    rows.slice(1).forEach(row => table.deleteRow(row.rowIndex)); // Supprime toutes les lignes sauf l'en-tête
+    
+    // Ajouter les nouvelles lignes triées
+    scores.forEach(scoreData => {
+        const row = table.insertRow();
+        const scoreCell = row.insertCell(0);
+        scoreCell.textContent = scoreData.score;
+    });
+}
+
 
 get();

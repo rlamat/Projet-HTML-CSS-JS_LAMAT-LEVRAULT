@@ -6,26 +6,26 @@
     <title>Jeu de vitesse</title>
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styleTab.css">
     <script src="script.js" defer></script>
 </head>
 <body>
     <h1>Jeu de vitesse</h1>
     <p>Frappe sur ton clavier le plus vite possible !</p>
-    <div>
+    <div id="infos_game">
         <p>Vous disposez d'une minute maximum.</p>
         <p>Temps restant : <span id="time">60</span> secondes !<p>
         <p>score : <span id="score">0</span></p>
     </div>
-    <div>
+    
+    <div id="game_container">
 
-        <div id="screen">
-            <div type="text" id="word_to_write"></div>
-        </div>
+        <div id="screen">a</div>
         <div>
+            <div id="btn_commencer"><button id="start">Commencer</button></div>
             <div id="keyboard">
                 <input type="text" id="input_keyboard" placeholder="entrer le mot ici">
             </div>
-            <button id="start">Commencer</button>
             <div id="time_container">
                 <label for="chrono">temps :</label>
                 <select name="chrono" id="chrono">
@@ -33,6 +33,7 @@
                     <option value="5">5s</option>
                     <option value="3">3s</option>
                     <option value="2">2s</option>
+                    <option value="1">1s</option>
                 </select>
             </div>
             <div id="nb_words_container">
@@ -87,7 +88,16 @@
         </div>
     </div>
     <aside>
-        <!-- score -->
+        <h2>Tableau des scores</h2>
+        <table id="score_table">
+            <thead>
+                <tr>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </aside>
 </body>
 </html>
