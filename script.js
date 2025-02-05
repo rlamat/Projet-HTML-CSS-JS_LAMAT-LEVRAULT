@@ -1,6 +1,7 @@
-// const words_api_link = "https://random-word-api.herokuapp.com/word?";
-const words_api_link = "https://trouve-mot.fr/api/";
+// url de l'api où l'on récupère les mots
+const wordsApiHost = "https://trouve-mot.fr/api/";
 
+// éléments sur la page
 const word_to_write = document.getElementById("word_to_write");
 const nb_words = document.getElementById("nb_words");
 const length_words = document.getElementById("length_words");
@@ -9,208 +10,241 @@ const screen = document.getElementById("screen");
 const buttonStart = document.getElementById("start");
 const inputZone = document.getElementById("input_keyboard");
 const score = document.getElementById("score");
-const timeChrono = document.getElementById("time")
+const timeChrono = document.getElementById("time");
 const time = document.getElementById("chrono");
 const checkAccel = document.getElementById("accel");
+const score_table = document.getElementById("score_table");
+
+// constantes
 const timeTotalStart = 10;
-const baseTime = 1000;
+const baseInterval = 1000;
 const speedAccel = 20;
 
+// variables pour la gestion du jeu
 let nbWords = nb_words.value;
 let lenWord = length_words.value;
 let words = [];
-let isFirstWord = true;
 let isGameRunning = false;
 let nCategory = categoriy.value;
 let timeCurrentChrono = timeTotalStart;
-let scores = [];
-let basicTime = 1000;
+let currentInterval = baseInterval;
+let interval;
 let wordsToPrint = [];
 
-buttonStart.addEventListener("click", startGame);
+buttonStart.addEventListener("click", () => {
+	if (!isGameRunning) startGame();
+	else stopGame();
+});
+
 inputZone.addEventListener("input", check);
+
 length_words.addEventListener("change", () => {
-    words = [];
-    lenWord = length_words.value;
-    get();
+	lenWord = length_words.value;
 });
+
 nb_words.addEventListener("change", () => {
-    words = [];
-    nbWords = nb_words.value;
-    get();
+	nbWords = nb_words.value;
 });
+
 categoriy.addEventListener("change", () => {
-    words = [];
-    nCategory = categoriy.value;
-    get();
-})
+	nCategory = categoriy.value;
+});
 
-
+async function getRandomWords() {
+	return await fetch(wordsApiHost + "random/" + nbWords);
+}
+/**
+ * Recuperation des mots depuis l'API
+ * Met les mots dans le tableau global words.
+ */
 async function getWords() {
-    try {
-        let response;
-        if (nCategory == 0) {
-            if (lenWord == 0) {
-                response = await fetch(words_api_link + "random/" + nbWords);
-            } else {
-                response = await fetch(words_api_link + "maxsize/" + lenWord + "/" + nbWords);
-            }
-            const data = await response.json();
-            words.push(...data);
-        }else{
-            response = await fetch(words_api_link + "categorie/" + nCategory + "/" + nbWords);
-            const data = await response.json();
-            words.push(...data);
-        }
-    } catch (error) {
-        console.error('Erreur:', error);
-    }
+	// cas où la catégorie n'est pas définie
+	if (nCategory == 0) {
+		let response;
+		// catégorie sans nombre de caractères défini
+		if (lenWord == 0) {
+			response = await getRandomWords();
+		} // nombre de caractères défini
+		else {
+			response = await fetch(
+				wordsApiHost + "maxsize/" + lenWord + "/" + nbWords
+			);
+		}
+		const data = await response.json();
+		words.push(...data);
+		// cas où la catégorie est définie
+	} else {
+		const response = await fetch(
+			wordsApiHost + "categorie/" + nCategory + "/" + nbWords
+		);
+		const data = await response.json();
+		words.push(...data);
+	}
 }
 
-function addWordToScreen(word){
-    screen.innerHTML += "<div><p>" + word.name + "</p></div>";        
-    
+/**
+ * Affiche le mot à l'écran
+ * @param {Object} word Le mot récupéré dans l'API
+ */
+function addWordToScreen(word) {
+	// screen est le "container" où les mots sont stockés
+	screen.innerHTML += "<div><p>" + word.name + "</p></div>";
 }
 
-function changeEtat(){
-    if(isGameRunning){
-        clearInterval(interval)
-        resetTimer()
-        enableButtons();
-        start.innerText = "Commencer"
-        isGameRunning = false;
-        score.innerText = "0";
-        words = [];
-        timeOver = false;
-        basicTime = baseTime;
-        get();
-        screen.innerHTML = "";
-    }else{
-        startTimer();
-        isGameRunning = true;
-        start.innerText = "Recommencer"
-    }
-    return isGameRunning;
+/**
+ * Initialiser le lancement du jeu
+ * @returns {Boolean}
+ */
+function stopGame() {
+	clearInterval(interval);
+	resetTimer();
+	enableButtons();
+	start.innerText = "Commencer";
+	isGameRunning = false;	
+	words = [];
+	timeOver = false;
+	currentInterval = baseInterval;
+	screen.innerHTML = "";
+	clearInterval(timerInterval);
+	clearInterval(interval);
+	addScore(score.textContent);
+	inputZone.setAttribute("disabled", "");
+	score.innerText = "0";
 }
 
+/**
+ * Lancer le jeu
+ */
 function startGame() {
-    disableButtons();
-    changeEtat()
-    if(isGameRunning){
-        if(words.length > 0) {
-            let word = words[0];
-            wordsToPrint.push(word);
-            addWordToScreen(word);
-            words.shift();
-        }
-        interval = setInterval(() => {
-            if(words.length > 0) {
-                accel();
-                let word = words[0];
-                wordsToPrint.push(word);
-                addWordToScreen(word);
-                words.shift();
-            }
-        }, time.value * basicTime);
-    }
+	disableButtons();
+	startTimer();
+	try {
+		getWords();
+	} catch (error) {
+		console.error("Erreur:", error);
+	}
+	isGameRunning = true;
+	start.innerText = "Recommencer";
+	displayNewWord();
+	interval = setInterval(() => {
+		accel();
+		displayNewWord();
+	}, getDisplayNewWordInterval());
 }
 
-function disableButtons(){
-    time.setAttribute("disabled", "");
-    nb_words.setAttribute("disabled","");
-    categoriy.setAttribute("disabled", "");
-    length_words.setAttribute("disabled", "");
-    checkAccel.setAttribute("disabled", "");
+function getDisplayNewWordInterval() {
+	return time.value * currentInterval;
 }
 
-function enableButtons(){
-    time.removeAttribute("disabled");
-    nb_words.removeAttribute("disabled");
-    categoriy.removeAttribute("disabled");
-    length_words.removeAttribute("disabled");
-    checkAccel.removeAttribute("disabled");
-    inputZone.removeAttribute("disabled");
+function displayNewWord() {
+	if (words.length <= 0) return;
+	let word = words[0];
+	wordsToPrint.push(word);
+	addWordToScreen(word);
+	words.shift();
 }
 
-function accel(){
-    if(checkAccel.checked){
-        clearInterval(interval);
-        basicTime = basicTime - speedAccel;
-        interval = setInterval(() => {
-            if(words.length > 0) {
-                accel();
-                let word = words[0];
-                wordsToPrint.push(word);
-                addWordToScreen(word);
-                words.shift();
-            }
-        }, time.value * basicTime);
-    }
+/**
+ * Ne pas avoir accès aux configurations quand le jeu est en marche
+ */
+function disableButtons() {
+	time.setAttribute("disabled", "");
+	nb_words.setAttribute("disabled", "");
+	categoriy.setAttribute("disabled", "");
+	length_words.setAttribute("disabled", "");
+	checkAccel.setAttribute("disabled", "");
 }
 
-function check(){
-    let input = inputZone.value.trim();
-    let word = screen.children[0].innerText;
-    if(input == word){
-        screen.removeChild(screen.children[0]);
-        inputZone.value = "";
-        score.innerText = parseInt(score.innerText) + 1;
-    }
+/**
+ * Configurer le jeu avant de commencer
+ */
+function enableButtons() {
+	time.removeAttribute("disabled");
+	nb_words.removeAttribute("disabled");
+	categoriy.removeAttribute("disabled");
+	length_words.removeAttribute("disabled");
+	checkAccel.removeAttribute("disabled");
+	inputZone.removeAttribute("disabled");
 }
 
-async function get() {
-    await getWords();
-    console.log(words);
+/**
+ * Fonction pour la difficulté acceleration
+ */
+function accel() {
+	if (!checkAccel.checked) return;
+	clearInterval(interval);
+	currentInterval = currentInterval - speedAccel;
+	interval = setInterval(() => {
+		if (words.length > 0) {
+			accel();
+			let word = words[0];
+			wordsToPrint.push(word);
+			addWordToScreen(word);
+			words.shift();
+		}
+	}, time.value * currentInterval);
 }
 
-function startTimer(){
-    timeCurrentChrono = timeTotalStart;
-    timeChrono.textContent = timeCurrentChrono;
-    timerInterval = setInterval(() => {
-        timeCurrentChrono = timeCurrentChrono - 1;
-        if(timeCurrentChrono == 0){
-            timeCurrentChrono = 0;
-            stopTimer();
-        }
-        timeChrono.textContent = timeCurrentChrono;
-    }, 1000);
-    let data = { year: 2012 };
+/**
+ * Verification de la saisie du mot à recopier
+ */
+function check() {
+	let input = inputZone.value.trim();
+	let word = screen.children[0].innerText;
+	if (input != word) return;
+
+	screen.removeChild(screen.children[0]);
+	inputZone.value = "";
+	score.innerText = parseInt(score.innerText) + 1;
 }
 
-function stopTimer(){
-    console.log("stop timer")
-    console.log(timeCurrentChrono)
-    clearInterval(timerInterval);
-    clearInterval(interval);
-    addScore(score.textContent);
-    inputZone.setAttribute("disabled", "");
+/**
+ * Déclencher le compte à rebours
+ */
+function startTimer() {
+	timeCurrentChrono = timeTotalStart;
+	timeChrono.textContent = timeCurrentChrono;
+	timerInterval = setInterval(() => {
+		timeCurrentChrono = timeCurrentChrono - 1;
+		if (timeCurrentChrono == 0) {
+			timeCurrentChrono = 0;
+			stopGame();
+		}
+		timeChrono.textContent = timeCurrentChrono;
+	}, 1000);
 }
 
-function resetTimer(){
-    clearInterval(timerInterval);
-    timeCurrentChrono = timeTotalStart;
-    timeChrono.textContent = timeCurrentChrono;
+function resetTimer() {
+	clearInterval(timerInterval);
+	timeCurrentChrono = timeTotalStart;
+	timeChrono.textContent = timeCurrentChrono;
 }
 
 function addScore(score) {
-    scores.push({score: score });
-    scores.sort((a, b) => b.score - a.score);
-    updateTable();
+	const scores = JSON.parse(localStorage.getItem("scores"));
+	scores.push(parseInt(score));
+	scores.sort((a, b) => {
+		return b - a;
+	});
+	localStorage.setItem("scores", JSON.stringify(scores));
+	updateTable();
 }
 
 function updateTable() {
-    const table = document.getElementById('score_table');
-    const rows = Array.from(table.rows);
-    console.log("aaaaaa");
-    rows.slice(1).forEach(row => table.deleteRow(row.rowIndex)); // Supprime toutes les lignes sauf l'en-tête
-    
-    // Ajouter les nouvelles lignes triées
-    scores.forEach(scoreData => {
-        const row = table.insertRow();
-        const scoreCell = row.insertCell(0);
-        scoreCell.textContent = scoreData.score;
-    });
+	let scores = JSON.parse(localStorage.getItem("scores"));
+	if (!scores) {
+		scores = [];
+		localStorage.setItem("scores", JSON.stringify(scores));
+	}
+
+	const rows = Array.from(score_table.rows);
+	rows.slice(1).forEach((row) => score_table.deleteRow(row.rowIndex)); // Supprime toutes les lignes sauf l'en-tête
+
+	// Ajouter les nouvelles lignes triées
+	for (let index = 0; index < 5 && index < scores.length; index++) {
+		const row = score_table.insertRow();
+		const scoreCell = row.insertCell(0);
+		scoreCell.textContent = scores[index];
+	}
 }
-
-
-get();
+updateTable();
