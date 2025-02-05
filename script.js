@@ -16,7 +16,7 @@ const checkAccel = document.getElementById("accel");
 const score_table = document.getElementById("score_table");
 
 // constantes
-const timeTotalStart = 10;
+const timeTotalStart = 60;
 const baseInterval = 1000;
 const speedAccel = 20;
 
