@@ -53,6 +53,19 @@ categoriy.addEventListener("change", () => {
 async function getRandomWords() {
 	return await fetch(wordsApiHost + "random/" + nbWords);
 }
+
+async function getRandomWordsWithLen(){
+	return await fetch(
+		wordsApiHost + "maxsize/" + lenWord + "/" + nbWords
+	);
+}
+
+async function getRandomWordsWithCategory(){
+	return await fetch(
+		wordsApiHost + "categorie/" + nCategory + "/" + nbWords
+	)
+}
+
 /**
  * Recuperation des mots depuis l'API
  * Met les mots dans le tableau global words.
@@ -66,17 +79,13 @@ async function getWords() {
 			response = await getRandomWords();
 		} // nombre de caractères défini
 		else {
-			response = await fetch(
-				wordsApiHost + "maxsize/" + lenWord + "/" + nbWords
-			);
+			response = await getRandomWordsWithLen();
 		}
 		const data = await response.json();
 		words.push(...data);
 		// cas où la catégorie est définie
 	} else {
-		const response = await fetch(
-			wordsApiHost + "categorie/" + nCategory + "/" + nbWords
-		);
+		const response = await getRandomWordsWithCategory();
 		const data = await response.json();
 		words.push(...data);
 	}
@@ -98,7 +107,6 @@ function addWordToScreen(word) {
 function stopGame() {
 	clearInterval(interval);
 	resetTimer();
-	enableButtons();
 	start.innerText = "Commencer";
 	isGameRunning = false;	
 	words = [];
@@ -109,7 +117,9 @@ function stopGame() {
 	clearInterval(interval);
 	addScore(score.textContent);
 	inputZone.setAttribute("disabled", "");
+	inputZone.value = "";
 	score.innerText = "0";
+	enableButtons();
 }
 
 /**
