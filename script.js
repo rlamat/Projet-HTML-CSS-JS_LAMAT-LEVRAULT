@@ -212,8 +212,7 @@ function check() {
  * Déclencher le compte à rebours
  */
 function startTimer() {
-	timeCurrentChrono = timeTotalStart;
-	timeChrono.textContent = timeCurrentChrono;
+	timeCurrentChrono = timeTotalStart + parseInt(time.value);
 	timerInterval = setInterval(() => {
 		timeCurrentChrono = timeCurrentChrono - 1;
 		if (timeCurrentChrono == 0) {
